@@ -8,7 +8,7 @@
 
 ### UI
 
-![UI](https://github.com/fpro-feup/public/blob/master/recitas/ui.png)
+![UI](https://github.com/gpe0/cosmic-swarm/blob/main/images/cosmicswarm.jpg)
 
 ### Pacotes
 
