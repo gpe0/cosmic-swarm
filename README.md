@@ -4,7 +4,7 @@
 ## 1MIEIC08
 ### Descrição
 
-*---Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tempo, eliminando as térmitas com os "bolts" da nossa nave espacial (jogador). Estas térmitas transportam blocos dificultando o nível. Caso haja colisão entre o jogador e um bloco ou uma térmita o jogador é destruído---*
+*--- Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tempo, eliminando as térmitas com os "bolts" da nossa nave espacial (jogador). Estas térmitas transportam blocos dificultando o nível. Caso haja colisão entre o jogador e um bloco ou uma térmita o jogador é destruído ---*
 
 ### UI
 
