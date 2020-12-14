@@ -1,17 +1,8 @@
 import pygame
 
+# Constantes iniciais
 SC_WIDTH = 800
 SC_HEIGHT = 600
-
-pygame.init()
-screen = pygame.display.set_mode((SC_WIDTH, SC_HEIGHT))
-pygame.display.set_caption('Cosmic Swarm')
-ship = pygame.image.load('images/ship.png').convert()
-ship.set_colorkey((0, 0, 0))
-clock = pygame.time.Clock()
-
-# INITIAL
-
 left_mov = False
 right_mov = False
 up_mov = False
@@ -19,15 +10,27 @@ down_mov = False
 rot_left = False
 rot_right = False
 
+#Inicialização
 
+pygame.init()
 
+screen = pygame.display.set_mode((SC_WIDTH, SC_HEIGHT))
 
-#Coordenadas e angulo da nave
+pygame.display.set_caption('Cosmic Swarm')
+
+ship = pygame.image.load('images/ship.png')
+
+ship.set_colorkey((0, 0, 0))
+
+clock = pygame.time.Clock()
+
+#Coordenadas e angulo inicial da nave
 pos_x = SC_WIDTH/2 - ship.get_width() / 2
 pos_y = SC_HEIGHT/2 - ship.get_height() / 2
 ang = 0
-running = True
 cp = ship
+
+running = True
 while running:
     #eventos
     for ev in pygame.event.get():
@@ -64,13 +67,14 @@ while running:
     #lógica
     dt = clock.tick()
     if up_mov:
-        pos_y -= 0.5 * dt
+        pos_y -= 0.3 * dt
     if left_mov:
-        pos_x -= 0.5 * dt
+        pos_x -= 0.3 * dt
     if down_mov:
-        pos_y += 0.5 * dt
+        pos_y += 0.3 * dt
     if right_mov:
-        pos_x += 0.5 * dt
+        pos_x += 0.3 * dt
+    
     if rot_left:
         ang += 0.2 * dt
         ang %= 360
@@ -87,6 +91,6 @@ while running:
     elif rot_right:
         screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_height()/2)))
     else:
-        screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_height()/2)))
+        screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
     pygame.display.flip()
 pygame.quit()
