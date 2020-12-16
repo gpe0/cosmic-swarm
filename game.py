@@ -1,4 +1,5 @@
-import pygame, random
+import pygame
+import random
 
 # Constantes iniciais
 SC_WIDTH = 800
@@ -94,6 +95,7 @@ while running:
         pos_x, pos_y = (pos_x + v_x/mod, pos_y + v_y/mod)
     v_x = v_y = 0
     
+    #Rotações
     
     if rot_left:
         ang += ang_vel * dt
