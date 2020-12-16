@@ -28,6 +28,11 @@ pygame.display.set_caption('Cosmic Swarm')
 ship = pygame.image.load('images/ship.png')
 ship.set_colorkey((0, 0, 0))
 
+ter1 = pygame.image.load('images/termite.png')
+ter2 = pygame.image.load('images/termite_red.png')
+ter3 = pygame.image.load('images/termite_green.png')
+colors = [ter1, ter2, ter3]
+
 clock = pygame.time.Clock()
 
 #Coordenadas e angulo inicial da nave
@@ -40,7 +45,7 @@ cp = ship
 t_pos_x = []
 t_pos_y = []
 spawn_c = 0 # contador de térmitas
-
+t_color = [] # cor da térmita
 
 running = True
 while running:
@@ -119,7 +124,8 @@ while running:
     if pygame.time.get_ticks() - time >= 6000: # Criar as térmitas
         time = pygame.time.get_ticks()
         t_pos_x.append(int(random.random() * 800))
-        t_pos_y.append(-10)
+        t_pos_y.append(-80)
+        t_color.append(colors[random.randint(0, 2)])
     for ind in range(len((t_pos_x))):
         t_pos_y[ind] += vel * dt
         
@@ -133,6 +139,6 @@ while running:
     else:
         screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
     for ind, pos_x_termita in enumerate(t_pos_x):
-        screen.blit(ship, (pos_x_termita, t_pos_y[ind]))
+        screen.blit(t_color[ind], (pos_x_termita, t_pos_y[ind]))
     pygame.display.flip()
 pygame.quit()
