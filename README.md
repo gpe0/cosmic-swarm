@@ -17,11 +17,11 @@
 
 ### Tarefas
 
-1. Carregar as imagens;
-2. Ler as teclas para mover a nave espacial;
-3. Criar colisões;
-4. Movimento aleatório das térmitas e a devida poisção dos blocos;
-5. Sistema de shooting;
-6. Sistema de pontuação;
-7. (SE POSSÍVEL) Algumas mecânicas especiais ("energized blocks", "Refuel");
-8. (SE POSSÍVEL) Animações.
+1. [ ] Carregar as imagens;
+2. [ ] Ler as teclas para mover a nave espacial;
+3. [ ] Criar colisões;
+4. [ ] Movimento aleatório das térmitas e a devida poisção dos blocos;
+5. [ ] Sistema de shooting;
+6. [ ] Sistema de pontuação;
+7. [ ] (SE POSSÍVEL) Algumas mecânicas especiais ("energized blocks", "Refuel");
+8. [ ] (SE POSSÍVEL) Animações.
