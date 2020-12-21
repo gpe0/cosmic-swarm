@@ -47,7 +47,9 @@ t_pos_y = []
 spawn_c = 0 # contador de térmitas
 t_color = [] # cor da térmita
 leave_pos = [] # Parede de saída da térmita
-leaving = True ''' Está True para debug!!!'''
+place_pos = []
+leaving = []
+moving = []
 
 running = True
 while running:
@@ -123,8 +125,12 @@ while running:
         pos_x = 0
     if pos_y > SC_HEIGHT:
         pos_y = 0
-    if pygame.time.get_ticks() - time >= 1000: # Criar as térmitas
+
+
+    if pygame.time.get_ticks() - time >= 6000: # Criar as térmitas
         time = pygame.time.get_ticks()
+        leaving.append(False)
+        moving.append(True)
         t_pos_x.append(int(random.random() * SC_WIDTH))
         t_pos_y.append(-80)
         t_color.append(colors[random.randint(0, 2)])
@@ -137,20 +143,36 @@ while running:
             leave_pos.append((int(random.random() * 1000),880))
         else:
             leave_pos.append((-80,int(random.random() * 800)))
+        place_pos.append((int(random.random() * 1000), int(random.random() * 800)))
     for ind in range(len((t_pos_x))):
-        if leaving:
-            t_vel_x = vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
-            t_vel_y = vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
-            gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
-            gap_y = int((leave_pos[ind][1] - t_pos_y[ind]))
+        if moving[ind]:
+            t_vel_x = vel * dt * (place_pos[ind][0] - t_pos_x[ind])
+            t_vel_y = vel * dt * (place_pos[ind][1] - t_pos_y[ind])
+            place_gap_x = int((place_pos[ind][0] - t_pos_x[ind]))
+            place_gap_y = int((place_pos[ind][1] - t_pos_y[ind]))
             mod_t = 1/vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
             if mod_t != 0:
                 t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
-            if gap_x == 0 and gap_y == 0:
+            if place_gap_x == 0 and place_gap_y == 0:
+                leaving[ind] = True
+                moving[ind] = False
+            
+        if leaving[ind]:
+            t_vel_x = vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
+            t_vel_y = vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
+            leave_gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
+            leave_gap_y = int((leave_pos[ind][1] - t_pos_y[ind]))
+            mod_t = 1/vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
+            if mod_t != 0:
+                t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
+            if leave_gap_x == 0 and leave_gap_y == 0:
                 del leave_pos[ind]
                 del t_pos_x[ind]
                 del t_pos_y[ind]
                 del t_color[ind]
+                del place_pos[ind]
+                del leaving[ind]
+                del moving[ind]
                 break
         
         
