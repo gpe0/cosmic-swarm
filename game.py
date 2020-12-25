@@ -174,8 +174,11 @@ while running:
                 moving[ind] = False
             
         if leaving[ind]:
+            t_vel_x = t_vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
+            t_vel_y = t_vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
             leave_gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
             leave_gap_y = int((leave_pos[ind][1] - t_pos_y[ind]))
+            mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
             if mod_t != 0:
                 t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
             if leave_gap_x == 0 and leave_gap_y == 0:
