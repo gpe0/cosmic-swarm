@@ -52,6 +52,8 @@ cp = ship
 #Coordenadas iniciais das térmitas
 t_pos_x = []
 t_pos_y = []
+
+t_vel = 0.25
 spawn_c = 0 # contador de térmitas
 t_color = [] # cor da térmita
 leave_pos = [] # Parede de saída da térmita
@@ -135,8 +137,13 @@ while running:
     if pos_y > SC_HEIGHT:
         pos_y = 0
 
+<<<<<<< HEAD
 
     if pygame.time.get_ticks() - time >= 3000: # Criar as térmitas
+=======
+    #Lógica das térmitas
+    if pygame.time.get_ticks() - time >= 6000: # Criar as térmitas
+>>>>>>> 5ad2edc29c946c5738f8e1a2867321a4b906afc1
         time = pygame.time.get_ticks()
         leaving.append(False)
         moving.append(True)
@@ -155,11 +162,11 @@ while running:
         place_pos.append((int(random.random() * 1000), int(random.random() * 800)))
     for ind in range(len((t_pos_x))):
         if moving[ind]:
-            t_vel_x = vel * dt * (place_pos[ind][0] - t_pos_x[ind])
-            t_vel_y = vel * dt * (place_pos[ind][1] - t_pos_y[ind])
+            t_vel_x = t_vel * dt * (place_pos[ind][0] - t_pos_x[ind])
+            t_vel_y = t_vel * dt * (place_pos[ind][1] - t_pos_y[ind])
             place_gap_x = int((place_pos[ind][0] - t_pos_x[ind]))
             place_gap_y = int((place_pos[ind][1] - t_pos_y[ind]))
-            mod_t = 1/vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
+            mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
             if mod_t != 0:
                 t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
             if place_gap_x == 0 and place_gap_y == 0:
@@ -167,11 +174,8 @@ while running:
                 moving[ind] = False
             
         if leaving[ind]:
-            t_vel_x = vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
-            t_vel_y = vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
             leave_gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
             leave_gap_y = int((leave_pos[ind][1] - t_pos_y[ind]))
-            mod_t = 1/vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
             if mod_t != 0:
                 t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
             if leave_gap_x == 0 and leave_gap_y == 0:
