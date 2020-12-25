@@ -137,13 +137,8 @@ while running:
     if pos_y > SC_HEIGHT:
         pos_y = 0
 
-<<<<<<< HEAD
 
     if pygame.time.get_ticks() - time >= 3000: # Criar as térmitas
-=======
-    #Lógica das térmitas
-    if pygame.time.get_ticks() - time >= 6000: # Criar as térmitas
->>>>>>> 5ad2edc29c946c5738f8e1a2867321a4b906afc1
         time = pygame.time.get_ticks()
         leaving.append(False)
         moving.append(True)
