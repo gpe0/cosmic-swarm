@@ -1,6 +1,13 @@
 import pygame
 import random
 
+
+def collision_termites(p1, r1, p2, r2):
+    d1 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 20))**2
+    d2 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 60))**2
+    return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
+
+
 # Constantes iniciais
 SC_WIDTH = 1000
 SC_HEIGHT = 800
@@ -25,7 +32,7 @@ screen = pygame.display.set_mode((SC_WIDTH, SC_HEIGHT))
 
 pygame.display.set_caption('Cosmic Swarm')
 
-ship = pygame.image.load('images/ship.png')
+ship = pygame.image.load('images/best_ship.png')
 ship.set_colorkey((0, 0, 0))
 
 ter1 = pygame.image.load('images/termite.png')
@@ -39,6 +46,7 @@ clock = pygame.time.Clock()
 pos_x = SC_WIDTH/2 - ship.get_width() / 2
 pos_y = SC_HEIGHT/2 - ship.get_height() / 2
 ang = 0
+r = 13
 cp = ship
 
 #Coordenadas iniciais das térmitas
@@ -50,6 +58,7 @@ leave_pos = [] # Parede de saída da térmita
 place_pos = []
 leaving = []
 moving = []
+r_t = 20
 
 running = True
 while running:
@@ -127,7 +136,7 @@ while running:
         pos_y = 0
 
 
-    if pygame.time.get_ticks() - time >= 6000: # Criar as térmitas
+    if pygame.time.get_ticks() - time >= 3000: # Criar as térmitas
         time = pygame.time.get_ticks()
         leaving.append(False)
         moving.append(True)
@@ -174,7 +183,11 @@ while running:
                 del leaving[ind]
                 del moving[ind]
                 break
-        
+
+        for ind in range(len((t_pos_x))):
+            if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
+                    running = False
+                    break
         
         
     #gráficos
