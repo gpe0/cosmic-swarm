@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 
 def collision_termites(p1, r1, p2, r2):
@@ -18,11 +19,18 @@ down_mov = False
 rot_left = False
 rot_right = False
 spawn_ter = False
+shooting = False
 v_x = 0
 v_y = 0
 vel = 0.35 # velocidade x e y
 ang_vel = 0.15 # velocidade de rotação
 time = 0 # inicio do jogo
+bul_sp = 0.5 # velocidade da bala
+b_pos_x = []
+b_pos_y = []
+increment = []
+shoot_cool = 1000 # Cooldown para disparar
+time_shoot = 0
 
 #Inicialização
 
@@ -34,7 +42,7 @@ pygame.display.set_caption('Cosmic Swarm')
 
 ship = pygame.image.load('images/best_ship.png')
 ship.set_colorkey((0, 0, 0))
-
+bullet = pygame.image.load('images/bullet.png')
 ter1 = pygame.image.load('images/termite.png')
 ter2 = pygame.image.load('images/termite_red.png')
 ter3 = pygame.image.load('images/termite_green.png')
@@ -46,7 +54,7 @@ clock = pygame.time.Clock()
 pos_x = SC_WIDTH/2 - ship.get_width() / 2
 pos_y = SC_HEIGHT/2 - ship.get_height() / 2
 ang = 0
-r = 13
+r = 10
 cp = ship
 
 #Coordenadas iniciais das térmitas
@@ -83,6 +91,8 @@ while running:
                 rot_left = True  
             elif ev.key == pygame.K_e:
                 rot_right = True  
+            elif ev.key == pygame.K_SPACE:
+                shooting = True
         elif ev.type == pygame.KEYUP:
             if ev.key == pygame.K_a:
                 left_mov = False
@@ -96,6 +106,8 @@ while running:
                 rot_left = False
             elif ev.key == pygame.K_e:
                 rot_right = False
+            elif ev.key == pygame.K_SPACE:
+                shooting = False
     #lógica
     dt = clock.tick()
     if up_mov:
@@ -191,6 +203,23 @@ while running:
                     running = False
                     break
         
+        #Shooting Logic
+        if shooting and pygame.time.get_ticks() >= time_shoot:
+            b_pos_x.append(pos_x + 16 * -math.sin(math.radians(ang)))
+            b_pos_y.append(pos_y + 16 * -math.cos(math.radians(ang)))
+            increment.append((-math.sin(math.radians(ang)), -math.cos(math.radians(ang))))
+            time_shoot += shoot_cool
+        
+        for ind in range(len(b_pos_x)):
+            b_vel_x = bul_sp * dt * increment[ind][0]
+            b_vel_y = bul_sp * dt * increment[ind][1]
+            b_pos_x[ind], b_pos_y[ind] = b_pos_x[ind] + b_vel_x, b_pos_y[ind] + b_vel_y
+            if b_pos_x[ind] < 0 or b_pos_x[ind] > SC_WIDTH or b_pos_y[ind] < 0 or b_pos_y[ind] > SC_HEIGHT:
+                del b_pos_x[ind]
+                del b_pos_y[ind]
+                del increment[ind]
+                break
+
         
     #gráficos
     screen.fill('black')
@@ -202,5 +231,7 @@ while running:
         screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
     for ind, pos_x_termita in enumerate(t_pos_x):
         screen.blit(t_color[ind], (pos_x_termita, t_pos_y[ind]))
+    for ind in range(len(b_pos_x)):
+        screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
     pygame.display.flip()
 pygame.quit()
