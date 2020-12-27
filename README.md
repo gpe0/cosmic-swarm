@@ -17,7 +17,7 @@
 
 ### Tarefas
 
-1. [ ] Carregar as imagens;
+1. [x] Carregar as imagens;
 2. [ ] Ler as teclas para mover a nave espacial;
 3. [ ] Criar colisões;
 4. [ ] Movimento aleatório das térmitas e a devida poisção dos blocos;
