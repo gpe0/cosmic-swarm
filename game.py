@@ -9,6 +9,12 @@ def collision_termites(p1, r1, p2, r2):
     return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
 
 
+def collision_bullets(p1, r1, p2, r2):
+    d1 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 20))**2
+    d2 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 60))**2
+    return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
+
+
 # Constantes iniciais
 SC_WIDTH = 1000
 SC_HEIGHT = 800
@@ -91,7 +97,7 @@ while running:
                 rot_left = True  
             elif ev.key == pygame.K_e:
                 rot_right = True  
-            elif ev.key == pygame.K_SPACE:
+            elif ev.key == pygame.K_SPACE and len(b_pos_x) == 0:
                 shooting = True
         elif ev.type == pygame.KEYUP:
             if ev.key == pygame.K_a:
@@ -150,7 +156,7 @@ while running:
         pos_y = 0
 
 
-    if pygame.time.get_ticks() - time >= 3000: # Criar as térmitas
+    if pygame.time.get_ticks() - time >= 4000: # Criar as térmitas
         time = pygame.time.get_ticks()
         leaving.append(False)
         moving.append(True)
@@ -168,6 +174,8 @@ while running:
             leave_pos.append((-80,int(random.random() * 800)))
         place_pos.append((int(random.random() * 1000), int(random.random() * 800)))
     for ind in range(len((t_pos_x))):
+        
+        
         if moving[ind]:
             t_vel_x = t_vel * dt * (place_pos[ind][0] - t_pos_x[ind])
             t_vel_y = t_vel * dt * (place_pos[ind][1] - t_pos_y[ind])
@@ -179,8 +187,8 @@ while running:
             if place_gap_x == 0 and place_gap_y == 0:
                 leaving[ind] = True
                 moving[ind] = False
-            
-        if leaving[ind]:
+           
+        elif leaving[ind]:
             t_vel_x = t_vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
             t_vel_y = t_vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
             leave_gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
@@ -197,19 +205,31 @@ while running:
                 del leaving[ind]
                 del moving[ind]
                 break
-
-        for ind in range(len((t_pos_x))):
-            if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
-                    running = False
+        
+        if len(b_pos_x) != 0:
+                if collision_bullets((b_pos_x[0], b_pos_y[0]), 1, (t_pos_x[ind], t_pos_y[ind]), r_t):
+                    del leave_pos[ind]
+                    del t_pos_x[ind]
+                    del t_pos_y[ind]
+                    del t_color[ind]
+                    del place_pos[ind]
+                    del leaving[ind]
+                    del moving[ind]
+                    del b_pos_x[0]
+                    del b_pos_y[0]
+                    del increment[0]
                     break
         
         #Shooting Logic
-        if shooting and pygame.time.get_ticks() >= time_shoot:
+
+        if shooting and pygame.time.get_ticks() >= time_shoot and len(b_pos_x) == 0:
             b_pos_x.append(pos_x + 16 * -math.sin(math.radians(ang)))
             b_pos_y.append(pos_y + 16 * -math.cos(math.radians(ang)))
             increment.append((-math.sin(math.radians(ang)), -math.cos(math.radians(ang))))
             time_shoot += shoot_cool
+            shooting = False
         
+       
         for ind in range(len(b_pos_x)):
             b_vel_x = bul_sp * dt * increment[ind][0]
             b_vel_y = bul_sp * dt * increment[ind][1]
@@ -219,7 +239,10 @@ while running:
                 del b_pos_y[ind]
                 del increment[ind]
                 break
-
+        for ind in range(len((t_pos_x))):
+            if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
+                    running = False
+                    break
         
     #gráficos
     screen.fill('black')
