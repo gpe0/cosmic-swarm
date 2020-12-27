@@ -2,9 +2,13 @@
 ## FPRO/MIEIC, 2020/21
 ## Gonçalo da Costa Sequeira Pinto (up202004907)
 ## 1MIEIC08
+### Objetivo
+
+Criar um clone do jogo [Cosmic Swarm](https://www.free80sarcade.com/atari2600_CosmicSwarm.php) da Atari 2600 em PyGame.
+
 ### Descrição
 
-*--- Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tempo possível, eliminando as térmitas com os "bolts" da nossa nave espacial (jogador). Estas térmitas transportam blocos dificultando o nível. Caso haja colisão entre o jogador e um bloco ou uma térmita o jogador é destruído ---*
+Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tempo possível, eliminando as térmitas com os "bolts" da nossa nave espacial (jogador). Estas térmitas transportam blocos dificultando o nível. Caso haja colisão entre o jogador e um bloco ou uma térmita o jogador é destruído.
 
 ### UI
 
@@ -17,7 +21,7 @@
 
 ### Tarefas
 
-1. [ ] Carregar as imagens;
+1. [x] Carregar as imagens;
 2. [ ] Ler as teclas para mover a nave espacial;
 3. [ ] Criar colisões;
 4. [ ] Movimento aleatório das térmitas e a devida poisção dos blocos;
