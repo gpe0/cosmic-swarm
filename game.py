@@ -49,10 +49,14 @@ pygame.display.set_caption('Cosmic Swarm')
 ship = pygame.image.load('images/best_ship.png')
 ship.set_colorkey((0, 0, 0))
 bullet = pygame.image.load('images/bullet.png')
-ter1 = pygame.image.load('images/termite.png')
-ter2 = pygame.image.load('images/termite_red.png')
-ter3 = pygame.image.load('images/termite_green.png')
-colors = [ter1, ter2, ter3]
+ter1_in = pygame.image.load('images/termite_purple_block.png')
+ter2_in = pygame.image.load('images/termite_red_block.png')
+ter3_in = pygame.image.load('images/termite_green_block.png')
+ter1_out = pygame.image.load('images/termite_purple.png')
+ter2_out = pygame.image.load('images/termite_red.png')
+ter3_out = pygame.image.load('images/termite_green.png')
+colors_in = [ter1_in, ter2_in, ter3_in]
+colors_out = [ter1_out, ter2_out, ter3_out]
 
 clock = pygame.time.Clock()
 
@@ -69,7 +73,8 @@ t_pos_y = []
 
 t_vel = 0.25
 spawn_c = 0 # contador de térmitas
-t_color = [] # cor da térmita
+t_color_in = []
+t_color_out = []
 leave_pos = [] # Parede de saída da térmita
 place_pos = []
 leaving = []
@@ -162,7 +167,9 @@ while running:
         moving.append(True)
         t_pos_x.append(int(random.random() * SC_WIDTH))
         t_pos_y.append(-80)
-        t_color.append(colors[random.randint(0, 2)])
+        col = random.randint(0, 2)
+        t_color_in.append(colors_in[col])
+        t_color_out.append(colors_out[col])
         rand = random.randint(0, 3)
         if rand == 0:
             leave_pos.append((int(random.random() * 1000),-80))
@@ -200,7 +207,8 @@ while running:
                 del leave_pos[ind]
                 del t_pos_x[ind]
                 del t_pos_y[ind]
-                del t_color[ind]
+                del t_color_out[ind]
+                del t_color_in[ind]
                 del place_pos[ind]
                 del leaving[ind]
                 del moving[ind]
@@ -211,7 +219,8 @@ while running:
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
-                    del t_color[ind]
+                    del t_color_out[ind]
+                    del t_color_in[ind]
                     del place_pos[ind]
                     del leaving[ind]
                     del moving[ind]
@@ -253,7 +262,10 @@ while running:
     else:
         screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
     for ind, pos_x_termita in enumerate(t_pos_x):
-        screen.blit(t_color[ind], (pos_x_termita, t_pos_y[ind]))
+        if moving[ind]:
+            screen.blit(t_color_in[ind], (pos_x_termita, t_pos_y[ind]))
+        else:
+            screen.blit(t_color_out[ind], (pos_x_termita, t_pos_y[ind]))
     for ind in range(len(b_pos_x)):
         screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
     pygame.display.flip()
