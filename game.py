@@ -245,7 +245,8 @@ while running:
                     if not energized:
                         energized = temp[1]
                         en_time = pygame.time.get_ticks()
-                    place_block((t_pos_x[ind], t_pos_y[ind]))
+                    if moving[ind]:
+                        place_block((t_pos_x[ind], t_pos_y[ind]))
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
