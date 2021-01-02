@@ -4,7 +4,7 @@
 ## 1MIEIC08
 ### Objetivo
 
-Criar um clone do jogo [Cosmic Swarm](https://www.free80sarcade.com/atari2600_CosmicSwarm.php) da Atari 2600 em PyGame.
+Criar um clone do jogo [Cosmic Swarm](https://www.free80sarcade.com/atari2600_CosmicSwarm.php) da Atari 2600 em Python.
 
 ### Descrição
 
