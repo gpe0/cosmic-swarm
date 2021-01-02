@@ -12,7 +12,7 @@ Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tem
 
 ### UI
 
-![UI](https://github.com/gpe0/cosmic-swarm/blob/main/images/cosmicswarm.jpg)
+![UI](https://github.com/gpe0/cosmic-swarm/blob/main/images/ui.jpg)
 
 ### Pacotes
 
