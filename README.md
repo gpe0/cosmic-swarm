@@ -22,10 +22,10 @@ Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tem
 ### Tarefas
 
 1. [x] Carregar as imagens;
-2. [ ] Ler as teclas para mover a nave espacial;
+2. [x] Ler as teclas para mover a nave espacial;
 3. [ ] Criar colisões;
-4. [ ] Movimento aleatório das térmitas e a devida poisção dos blocos;
-5. [ ] Sistema de shooting;
+4. [x] Movimento aleatório das térmitas e a devida poisção dos blocos;
+5. [x] Sistema de shooting;
 6. [ ] Sistema de pontuação;
 7. [ ] (SE POSSÍVEL) Algumas mecânicas especiais ("energized blocks", "Refuel");
 8. [ ] (SE POSSÍVEL) Animações.
