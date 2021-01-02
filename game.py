@@ -2,11 +2,18 @@ import pygame
 import random
 import math
 
+def place_block(termite_pos):
+    blocks.append((int(termite_pos[0]) + 20, int(termite_pos[1]) + 68))
+
 
 def collision_termites(p1, r1, p2, r2):
     d1 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 20))**2
     d2 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 60))**2
     return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
+
+def collision_blocks(p1, r1, p2, r2):
+    d = ((p1[0]) - (p2[0] + 6))**2 + ((p1[1]) - (p2[1] + 6))**2
+    return (d < (r1 + r2)**2)
 
 
 def collision_bullets(p1, r1, p2, r2):
@@ -37,6 +44,7 @@ b_pos_y = []
 increment = []
 shoot_cool = 1000 # Cooldown para disparar
 time_shoot = 0
+r_b = 6
 
 #Inicialização
 
@@ -55,6 +63,7 @@ ter3_in = pygame.image.load('images/termite_green_block.png')
 ter1_out = pygame.image.load('images/termite_purple.png')
 ter2_out = pygame.image.load('images/termite_red.png')
 ter3_out = pygame.image.load('images/termite_green.png')
+block = pygame.image.load('images/square.png')
 colors_in = [ter1_in, ter2_in, ter3_in]
 colors_out = [ter1_out, ter2_out, ter3_out]
 
@@ -80,6 +89,8 @@ place_pos = []
 leaving = []
 moving = []
 r_t = 20
+
+blocks = []
 
 running = True
 while running:
@@ -193,6 +204,7 @@ while running:
                 t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
             if place_gap_x == 0 and place_gap_y == 0:
                 leaving[ind] = True
+                place_block((t_pos_x[ind], t_pos_y[ind]))
                 moving[ind] = False
            
         elif leaving[ind]:
@@ -252,6 +264,9 @@ while running:
             if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
                     running = False
                     break
+        for b in blocks:
+            if collision_blocks((pos_x, pos_y), r, b, r_b):
+                running = False
         
     #gráficos
     screen.fill('black')
@@ -268,5 +283,7 @@ while running:
             screen.blit(t_color_out[ind], (pos_x_termita, t_pos_y[ind]))
     for ind in range(len(b_pos_x)):
         screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
+    for b in blocks:
+        screen.blit(block, b)
     pygame.display.flip()
 pygame.quit()
