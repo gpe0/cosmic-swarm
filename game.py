@@ -16,11 +16,20 @@ def collision_blocks(p1, r1, p2, r2):
     return (d < (r1 + r2)**2)
 
 
-def collision_bullets(p1, r1, p2, r2):
+def collision_bullets(p1, r1, p2, r2, moving, energized):
     d1 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 20))**2
     d2 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 60))**2
-    return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
-
+    d1_e = ((p1[0] + 1) - (p2[0] + 5))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
+    d2_e = ((p1[0] + 1) - (p2[0] + 15))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
+    d3_e = ((p1[0] + 1) - (p2[0] + 25))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
+    d4_e = ((p1[0] + 1) - (p2[0] + 35))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
+    if not moving:
+        pass
+    else:
+        if (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2):
+            if d1_e < (r1 + 5) ** 2 or d2_e < (r1 + 5) ** 2 or d3_e < (r1 + 5) ** 2 or d4_e < (r1 + 5) ** 2:
+                energized = True
+    return ((d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2), energized)
 
 # Constantes iniciais
 SC_WIDTH = 1000
@@ -45,6 +54,9 @@ increment = []
 shoot_cool = 1000 # Cooldown para disparar
 time_shoot = 0
 r_b = 6
+energized = False
+en_time = 0
+en_cool = 3000
 
 #Inicialização
 
@@ -64,6 +76,7 @@ ter1_out = pygame.image.load('images/termite_purple.png')
 ter2_out = pygame.image.load('images/termite_red.png')
 ter3_out = pygame.image.load('images/termite_green.png')
 block = pygame.image.load('images/square.png')
+block_en = pygame.image.load('images/square_energized.png')
 colors_in = [ter1_in, ter2_in, ter3_in]
 colors_out = [ter1_out, ter2_out, ter3_out]
 
@@ -227,7 +240,12 @@ while running:
                 break
         
         if len(b_pos_x) != 0:
-                if collision_bullets((b_pos_x[0], b_pos_y[0]), 1, (t_pos_x[ind], t_pos_y[ind]), r_t):
+                temp = collision_bullets((b_pos_x[0], b_pos_y[0]), 1, (t_pos_x[ind], t_pos_y[ind]), r_t, moving[ind], energized)
+                if temp[0]:
+                    if not energized:
+                        energized = temp[1]
+                        en_time = pygame.time.get_ticks()
+                    place_block((t_pos_x[ind], t_pos_y[ind]))
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
@@ -267,7 +285,9 @@ while running:
         for b in blocks:
             if collision_blocks((pos_x, pos_y), r, b, r_b):
                 running = False
-        
+    if energized and pygame.time.get_ticks() - en_time >= en_cool:
+        energized = False
+
     #gráficos
     screen.fill('black')
     if rot_left:
@@ -283,7 +303,11 @@ while running:
             screen.blit(t_color_out[ind], (pos_x_termita, t_pos_y[ind]))
     for ind in range(len(b_pos_x)):
         screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
-    for b in blocks:
-        screen.blit(block, b)
+    if not energized:
+        for b in blocks:
+            screen.blit(block, b)
+    else:
+        for b in blocks:
+            screen.blit(block_en, b)
     pygame.display.flip()
 pygame.quit()
