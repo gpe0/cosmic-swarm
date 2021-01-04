@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 
+
 def place_block(termite_pos):
     blocks.append((int(termite_pos[0]) + 20, int(termite_pos[1]) + 68))
 
@@ -24,7 +25,7 @@ def collision_bullets(p1, r1, p2, r2, moving, energized):
     d2 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 60))**2
     d1_e = ((p1[0] + 1) - (p2[0] + 5))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
     d2_e = ((p1[0] + 1) - (p2[0] + 15))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
-    d3_e = ((p1[0] + 1) - (p2[0] + 25))**2 + ((p1[1] + 1) - (p2[1] + 5))**2
+    d3_e = ((p1[0] + 1) - (p2[0] + 25))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
     d4_e = ((p1[0] + 1) - (p2[0] + 35))**2 + ((p1[1] + 1) - (p2[1] + 85))**2
     if not moving:
         pass
@@ -60,11 +61,12 @@ r_b = 6
 energized = False
 en_time = 0
 en_cool = 3000
+game_time = 15000
+score = 0
 
 #Inicialização
 
 pygame.init()
-
 screen = pygame.display.set_mode((SC_WIDTH, SC_HEIGHT))
 
 pygame.display.set_caption('Cosmic Swarm')
@@ -96,7 +98,7 @@ cp = ship
 t_pos_x = []
 t_pos_y = []
 
-t_vel = 0.25
+t_vel = 0.12
 spawn_c = 0 # contador de térmitas
 t_color_in = []
 t_color_out = []
@@ -181,10 +183,10 @@ while running:
     if pos_x < 0:
         pos_x = SC_WIDTH
     if pos_y < 0:
-        pos_y = SC_HEIGHT
+        pos_y = SC_HEIGHT - 50
     if pos_x > SC_WIDTH:
         pos_x = 0
-    if pos_y > SC_HEIGHT:
+    if pos_y > SC_HEIGHT - 50:
         pos_y = 0
 
 
@@ -201,12 +203,12 @@ while running:
         if rand == 0:
             leave_pos.append((int(random.random() * 1000 - 20),-80 - 85))
         elif rand == 1:
-            leave_pos.append((1080 - 20,int(random.random() * 800)- 85))
+            leave_pos.append((1080 - 20,int(random.random() * 750)- 85))
         elif rand == 2:
-            leave_pos.append((int(random.random() * 1000)- 20,880- 85))
+            leave_pos.append((int(random.random() * 1000)- 20,750 + 80 - 85))
         else:
-            leave_pos.append((-80 - 20,int(random.random() * 800)- 85))
-        place_pos.append((int(random.random() * 1000)- 20, int(random.random() * 800)- 85))
+            leave_pos.append((-80 - 20,int(random.random() * 750)- 85))
+        place_pos.append((int(random.random() * 1000)- 20, int(random.random() * 750)- 85))
     for ind in range(len((t_pos_x))):
 
         if moving[ind]:
@@ -249,6 +251,9 @@ while running:
                         en_time = pygame.time.get_ticks()
                     if moving[ind]:
                         place_block((t_pos_x[ind], t_pos_y[ind]))
+                        score += 2
+                    else:
+                        score += 1
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
@@ -306,9 +311,13 @@ while running:
                     del b_pos_x[0]
                     del b_pos_y[0]
                     del increment[0]
+                    score += 3
                     break
     if energized and pygame.time.get_ticks() - en_time >= en_cool:
         energized = False
+    if game_time <=  pygame.time.get_ticks():
+        game_time =  pygame.time.get_ticks() + 15000
+        t_vel += 0.03
 
     #gráficos
     screen.fill('black')
@@ -331,5 +340,11 @@ while running:
     else:
         for b in blocks:
             screen.blit(block_en, b)
+    font = pygame.font.Font(pygame.font.match_font('font/PixelOperator.TTF'), 50) # NOT WORKING
+    text_suf = font.render(f'SCORE: {score}', True, 'WHITE')
+    text_ret = text_suf.get_rect()
+    text_ret.midbottom = (500, 795)
+    ret = pygame.draw.rect(screen, pygame.Color(10, 10, 10), (0, 750, 1000, 200))
+    screen.blit(text_suf, text_ret)
     pygame.display.flip()
 pygame.quit()
