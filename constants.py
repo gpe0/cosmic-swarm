@@ -27,11 +27,17 @@ en_time = 0
 en_cool = 3000
 game_time = 15000
 score = 0
-
+lives = 3
 ang = 0
 r = 10
-
-
+respawn = False
+res_cool = 2000
+res_time = 0
+die_time = 0
+tick = 200
+c = 0
+change = False
+fuel_tot = 0
 #Coordenadas iniciais das térmitas
 t_pos_x = []
 t_pos_y = []
@@ -47,7 +53,8 @@ moving = []
 r_t = 20
 
 blocks = []
-ship = pygame.image.load('images/best_ship.png')
+ship = pygame.image.load('images/ship.png')
+life = pygame.image.load('images/life.png')
 ship.set_colorkey((0, 0, 0))
 bullet = pygame.image.load('images/bullet.png')
 ter1_in = pygame.image.load('images/termite_purple_block.png')
