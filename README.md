@@ -18,6 +18,7 @@ Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tem
 
 - Pygame
 - Random
+- Math
 
 ### Tarefas
 
