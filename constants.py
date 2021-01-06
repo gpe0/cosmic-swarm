@@ -55,7 +55,7 @@ r_t = 20
 blocks = []
 ship = pygame.image.load('images/ship.png')
 life = pygame.image.load('images/life.png')
-ship.set_colorkey((0, 0, 0))
+
 bullet = pygame.image.load('images/bullet.png')
 ter1_in = pygame.image.load('images/termite_purple_block.png')
 ter2_in = pygame.image.load('images/termite_red_block.png')
