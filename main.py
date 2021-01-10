@@ -124,7 +124,7 @@ while running:
         pos_y = 50
 
 
-    if pygame.time.get_ticks() - time >= 4000: # Criar as térmitas
+    if pygame.time.get_ticks() - time >= t_spawn: # Criar as térmitas
         time = pygame.time.get_ticks()
         leaving.append(False)
         moving.append(True)
@@ -188,7 +188,7 @@ while running:
                         score += 2
                     else:
                         score += 1
-                    fuel_tot -= 5
+                    fuel_tot -= fuel_regen
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
@@ -264,14 +264,17 @@ while running:
                     del b_pos_x[0]
                     del b_pos_y[0]
                     del increment[0]
-                    fuel_tot -= 7
+                    fuel_tot -= fuel_regen
                     score += 3
                     break
     if energized and pygame.time.get_ticks() - en_time >= en_cool:
         energized = False
     if game_time <=  pygame.time.get_ticks():
         game_time =  pygame.time.get_ticks() + 15000
-        t_vel += 0.03
+        t_vel += 0.1 * t_vel
+        fuel_inc += 0.1 * fuel_inc
+        fuel_regen -= 0.1 * fuel_regen
+        t_spawn -= 0.1 * t_spawn
     
     if lives == 0:
         running = False
@@ -279,8 +282,9 @@ while running:
         fuel_tot = 0
     if int(fuel_tot) == 30:
         running = False
-    fuel_tot += 0.0005
-
+    fuel_tot += fuel_inc * dt
+    seconds = (pygame.time.get_ticks() // 1000) % 60
+    minutes = (pygame.time.get_ticks() // 1000) // 60
     #gráficos
     screen.fill('black')
     if not respawn:
@@ -339,7 +343,11 @@ while running:
     fuel_ret.midbottom = (800, 795)
     lives_suf = font.render(f'LIVES', True, 'WHITE')
     lives_ret = score_suf.get_rect()
-    lives_ret.midbottom = (200, 795)
+    lives_ret.midbottom = (180, 795)
+    timer_suf = font.render(f'{minutes:02}:{seconds:02}', True, 'WHITE')
+    timer_ret = timer_suf.get_rect()
+    timer_ret.midbottom = (500, 795)
+    
     ret_bot = pygame.draw.rect(screen, pygame.Color(20, 20, 20), (0, 750, 1000, 200)) # BOTTOM RECT
     ret_top = pygame.draw.rect(screen, pygame.Color(20, 20, 20), (0, -150, 1000, 200)) # TOP RECT
     screen.blit(score_suf, score_ret) # SCORE
@@ -347,11 +355,12 @@ while running:
     bg_fuel = pygame.draw.rect(screen, pygame.Color(40, 40, 40), (830, 755, 30, 40)) 
     fuel = pygame.draw.rect(screen, pygame.Color(200, 50, 20), (835, 760 + fuel_tot, 20, 30 - fuel_tot)) 
     screen.blit(lives_suf, lives_ret) # LIVES
+    screen.blit(timer_suf, timer_ret) # TIMER
     if lives == 3:
-        screen.blit(life, (325, 768))
+        screen.blit(life, (305, 768))
     if lives >= 2:
-        screen.blit(life, (295, 768))
+        screen.blit(life, (275, 768))
     if lives >= 1:
-        screen.blit(life, (265, 768))
+        screen.blit(life, (245, 768))
     pygame.display.flip()
 pygame.quit()

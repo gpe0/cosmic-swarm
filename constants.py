@@ -38,6 +38,13 @@ tick = 200
 c = 0
 change = False
 fuel_tot = 0
+fuel_inc = 0.0005
+fuel_regen = 5
+t_spawn = 4000
+minutes = 0
+seconds = 0
+
+
 #Coordenadas iniciais das térmitas
 t_pos_x = []
 t_pos_y = []
