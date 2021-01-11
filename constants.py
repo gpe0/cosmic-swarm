@@ -64,17 +64,19 @@ ship = pygame.image.load('images/ship.png')
 life = pygame.image.load('images/life.png')
 
 bullet = pygame.image.load('images/bullet.png')
-ter1_in = pygame.image.load('images/termite_purple_block.png')
-ter2_in = pygame.image.load('images/termite_red_block.png')
-ter3_in = pygame.image.load('images/termite_green_block.png')
-ter1_out = pygame.image.load('images/termite_purple.png')
-ter2_out = pygame.image.load('images/termite_red.png')
-ter3_out = pygame.image.load('images/termite_green.png')
+ter1_in = [pygame.image.load('images/termite_purple_block.png'), pygame.image.load('images/termite_purple_block_2.png'), pygame.image.load('images/termite_purple_block.png'), pygame.image.load('images/termite_purple_block_3.png')]
+ter2_in = [pygame.image.load('images/termite_red_block.png'), pygame.image.load('images/termite_red_block_2.png'), pygame.image.load('images/termite_red_block.png'), pygame.image.load('images/termite_red_block_3.png')]
+ter3_in = [pygame.image.load('images/termite_green_block.png'), pygame.image.load('images/termite_green_block_2.png'), pygame.image.load('images/termite_green_block.png'), pygame.image.load('images/termite_green_block_3.png')]
+ter1_out = [pygame.image.load('images/termite_purple.png'), pygame.image.load('images/termite_purple_2.png'), pygame.image.load('images/termite_purple.png'), pygame.image.load('images/termite_purple_3.png')]
+ter2_out = [pygame.image.load('images/termite_red.png'), pygame.image.load('images/termite_red_2.png'), pygame.image.load('images/termite_red.png'), pygame.image.load('images/termite_red_3.png')]
+ter3_out = [pygame.image.load('images/termite_green.png'), pygame.image.load('images/termite_green_2.png'), pygame.image.load('images/termite_green.png'), pygame.image.load('images/termite_green_3.png')]
 block = pygame.image.load('images/square.png')
 block_en = pygame.image.load('images/square_energized.png')
 colors_in = [ter1_in, ter2_in, ter3_in]
 colors_out = [ter1_out, ter2_out, ter3_out]
-
+t_animation_pos = []
+c_in = []
+c_out = []
 clock = pygame.time.Clock()
 
 #Coordenadas e angulo inicial da nave

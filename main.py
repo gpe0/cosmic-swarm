@@ -35,6 +35,30 @@ def collision_bullets(p1, r1, p2, r2, moving, energized):
                 energized = True
     return ((d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2), energized)
 
+def shoot_sound():
+    pygame.mixer.music.load("sounds/shoot.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
+
+def explosion_sound():
+    pygame.mixer.music.load("sounds/explosion.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
+
+def block_en_sound():
+    pygame.mixer.music.load("sounds/block_col_en.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
+
+def block_sound():
+    pygame.mixer.music.load("sounds/block_col.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
+
+def explosion_ship_sound():
+    pygame.mixer.music.load("sounds/explosion_ship.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
 
 #Inicialização
 
@@ -134,6 +158,9 @@ while running:
         t_color_in.append(colors_in[col])
         t_color_out.append(colors_out[col])
         rand = random.randint(0, 3)
+        t_animation_pos.append(0)
+        c_in.append(0)
+        c_out.append(0)
         if rand == 0:
             leave_pos.append((int(random.random() * 1000 - 20),-80 - 85))
         elif rand == 1:
@@ -175,6 +202,9 @@ while running:
                 del place_pos[ind]
                 del leaving[ind]
                 del moving[ind]
+                del t_animation_pos[ind]
+                del c_in[ind]
+                del c_out[ind]
                 break
         
         if len(b_pos_x) != 0:
@@ -189,6 +219,7 @@ while running:
                     else:
                         score += 1
                     fuel_tot -= fuel_regen
+                    explosion_sound()
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
@@ -200,11 +231,15 @@ while running:
                     del b_pos_x[0]
                     del b_pos_y[0]
                     del increment[0]
+                    del t_animation_pos[ind]
+                    del c_in[ind]
+                    del c_out[ind]
                     break
         
     #Shooting Logic
 
     if shooting and pygame.time.get_ticks() >= time_shoot and len(b_pos_x) == 0:
+        shoot_sound()
         b_pos_x.append(pos_x + 16 * -math.sin(math.radians(ang)))
         b_pos_y.append(pos_y + 16 * -math.cos(math.radians(ang)))
         increment.append((-math.sin(math.radians(ang)), -math.cos(math.radians(ang))))
@@ -225,6 +260,7 @@ while running:
         if not respawn:
             if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
                     lives -= 1
+                    explosion_ship_sound()
                     pos_x = SC_WIDTH/2 - ship.get_width() / 2
                     pos_y = SC_HEIGHT/2 - ship.get_height() / 2
                     die_time = pygame.time.get_ticks()
@@ -236,6 +272,7 @@ while running:
             if not respawn:
                 if collision_blocks((pos_x, pos_y), r, b, r_b):
                     lives -= 1
+                    explosion_ship_sound()
                     pos_x = SC_WIDTH/2 - ship.get_width() / 2
                     pos_y = SC_HEIGHT/2 - ship.get_height() / 2 
                     die_time = pygame.time.get_ticks()
@@ -246,12 +283,14 @@ while running:
                         del b_pos_x[0]
                         del b_pos_y[0]
                         del increment[0]
+                        block_sound()
                         break
         else:
             if not respawn:
                 if collision_blocks((pos_x, pos_y), r, b, r_b):
                     del blocks[ind]
                     lives -= 1
+                    explosion_ship_sound()
                     pos_x = SC_WIDTH/2 - ship.get_width() / 2
                     pos_y = SC_HEIGHT/2 - ship.get_height() / 2
                     respawn = True
@@ -265,6 +304,7 @@ while running:
                     del b_pos_y[0]
                     del increment[0]
                     fuel_tot -= fuel_regen
+                    block_en_sound()
                     score += 3
                     break
     if energized and pygame.time.get_ticks() - en_time >= en_cool:
@@ -324,9 +364,23 @@ while running:
             
     for ind, pos_x_termita in enumerate(t_pos_x):
         if moving[ind]:
-            screen.blit(t_color_in[ind], (pos_x_termita, t_pos_y[ind]))
+            temp = t_color_in[ind][t_animation_pos[ind]]
+            if c_in[ind] == 150:
+                t_animation_pos[ind] += 1
+                t_animation_pos[ind] = t_animation_pos[ind] % 4
+                c_in[ind] = 0
+            c_in[ind] += 1
+            screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
+
         else:
-            screen.blit(t_color_out[ind], (pos_x_termita, t_pos_y[ind]))
+            temp = t_color_out[ind][t_animation_pos[ind]]
+            if c_out[ind] == 150:
+                t_animation_pos[ind] += 1
+                t_animation_pos[ind] = t_animation_pos[ind] % 4
+                c_out[ind] = 0
+
+            c_out[ind] += 1
+            screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
     for ind in range(len(b_pos_x)):
         screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
     if not energized:
