@@ -30,4 +30,5 @@ Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tem
 6. [x] Sistema de pontuação;
 7. [x] Algumas mecânicas especiais ("energized blocks", "Refuel");
 8. [ ] Animações e Efeitos Sonoros;
-9. [ ] Menu.
+9. [x] Menu.
+
