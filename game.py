@@ -391,8 +391,8 @@ def game(screen, font):
                         break
         if energized and pygame.time.get_ticks() - en_time >= en_cool:
             energized = False
-        if game_time <=  pygame.time.get_ticks():
-            game_time =  pygame.time.get_ticks() + 15000
+        if game_time <=  (pygame.time.get_ticks() - offset):
+            game_time =  (pygame.time.get_ticks() - offset) + 15000
             t_vel += 0.1 * t_vel
             fuel_inc += 0.1 * fuel_inc
             fuel_regen -= 0.1 * fuel_regen
@@ -407,7 +407,6 @@ def game(screen, font):
         fuel_tot += fuel_inc * dt
         seconds = ((pygame.time.get_ticks() - offset) // 1000) % 60
         minutes = ((pygame.time.get_ticks() - offset) // 1000) // 60
-        
         
         
         #gráficos
@@ -502,3 +501,4 @@ def game(screen, font):
         if lives >= 1:
             screen.blit(life, (245, 768))
         pygame.display.flip()
+    return score

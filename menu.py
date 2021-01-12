@@ -1,6 +1,6 @@
 import pygame
 
-def menu(screen):
+def menu(screen, score):
     up = False
     down = False
     running = True
@@ -8,6 +8,7 @@ def menu(screen):
     press = False
     font = pygame.font.Font('font/8-bit-pusab.ttf', 70)
     font2 = pygame.font.Font('font/8-bit-pusab.ttf', 50)
+    font3 = pygame.font.Font('font/8-bit-pusab.ttf', 30)
     c1 = 'WHITE'
     c2 = 'WHITE'
     time = 0
@@ -59,6 +60,11 @@ def menu(screen):
         title_ret = title_suf.get_rect()
         title_ret.midtop = (500, 100)
         screen.blit(title_suf, title_ret)
+
+        score_suf = font3.render(f'HIGHSCORE: {score}', True, 'WHITE')
+        score_ret = score_suf.get_rect()
+        score_ret.midtop = (500, 250)
+        screen.blit(score_suf, score_ret)
         
         play_suf = font2.render('PLAY', True, c1)
         play_ret = play_suf.get_rect()

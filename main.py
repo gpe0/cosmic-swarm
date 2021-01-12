@@ -15,12 +15,15 @@ pygame.display.set_caption('Cosmic Swarm')
 
 font = pygame.font.Font('font/8-bit-pusab.ttf', 23)
 
+score = 0
 
 
 while True:
-    op = menu(screen)
+    op = menu(screen, score)
     if op == 0:
-        game(screen, font)
+        sc = game(screen, font)
+        if sc > score:
+            score = sc
     if op == 1:
         break
 
