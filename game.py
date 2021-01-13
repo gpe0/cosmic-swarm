@@ -138,6 +138,13 @@ def game(screen, font):
     block_en = pygame.image.load('images/square_energized.png')
     colors_in = [ter1_in, ter2_in, ter3_in]
     colors_out = [ter1_out, ter2_out, ter3_out]
+    t_purple_death = [pygame.image.load('images/termite_purple_dead_1.png'), pygame.image.load('images/termite_purple_dead_2.png'), pygame.image.load('images/termite_purple_dead_3.png')]
+    t_red_death = [pygame.image.load('images/termite_red_dead_1.png'), pygame.image.load('images/termite_red_dead_2.png'), pygame.image.load('images/termite_red_dead_3.png')]
+    t_green_death = [pygame.image.load('images/termite_green_dead_1.png'), pygame.image.load('images/termite_green_dead_2.png'), pygame.image.load('images/termite_green_dead_3.png')]
+    t_d_pos = []
+    t_d_color = []
+    pos_d_ani = []
+    c_d_ani = []
     t_animation_pos = []
     c_in = []
     c_out = []
@@ -230,7 +237,7 @@ def game(screen, font):
             pos_y = 50
     
     
-        if pygame.time.get_ticks() - time >= t_spawn: # Criar as térmitas
+        if (pygame.time.get_ticks() - offset) - time >= t_spawn: # Criar as térmitas
             time = pygame.time.get_ticks()
             leaving.append(False)
             moving.append(True)
@@ -302,6 +309,15 @@ def game(screen, font):
                             score += 1
                         fuel_tot -= fuel_regen
                         explosion_sound()
+                        t_d_pos.append((t_pos_x[ind], t_pos_y[ind]))
+                        if colors_in.index(t_color_in[ind]) == 0:
+                            t_d_color.append(t_purple_death)
+                        elif colors_in.index(t_color_in[ind]) == 1:
+                            t_d_color.append(t_red_death)
+                        else:
+                            t_d_color.append(t_green_death)
+                        pos_d_ani.append(0)
+                        c_d_ani.append(65)
                         del leave_pos[ind]
                         del t_pos_x[ind]
                         del t_pos_y[ind]
@@ -445,7 +461,20 @@ def game(screen, font):
                     screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
             else:
                 pass
-                
+
+        for ind in range(len(t_d_pos)):
+            if pos_d_ani[ind] == 3:
+                del pos_d_ani[ind]
+                del t_d_pos[ind]
+                del t_d_color[ind]
+                del c_d_ani[ind]
+                break
+            else:
+                screen.blit(t_d_color[ind][pos_d_ani[ind]], t_d_pos[ind])
+                c_d_ani[ind] -= 1
+                if c_d_ani[ind] == 0:
+                    c_d_ani[ind] = 65
+                    pos_d_ani[ind] += 1
         for ind, pos_x_termita in enumerate(t_pos_x):
             if moving[ind]:
                 temp = t_color_in[ind][t_animation_pos[ind]]
@@ -485,7 +514,6 @@ def game(screen, font):
         timer_suf = font.render(f'{minutes:02}:{seconds:02}', True, 'WHITE')
         timer_ret = timer_suf.get_rect()
         timer_ret.midbottom = (500, 795)
-        
         ret_bot = pygame.draw.rect(screen, pygame.Color(20, 20, 20), (0, 750, 1000, 200)) # BOTTOM RECT
         ret_top = pygame.draw.rect(screen, pygame.Color(20, 20, 20), (0, -150, 1000, 200)) # TOP RECT
         screen.blit(score_suf, score_ret) # SCORE
