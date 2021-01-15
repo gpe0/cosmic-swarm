@@ -80,7 +80,6 @@ def game(screen, font):
     v_y = 0
     vel = 0.35 # velocidade x e y
     ang_vel = 0.2 # velocidade de rotação
-    time = 0 # inicio do jogo
     bul_sp = 0.5 # velocidade da bala
     b_pos_x = []
     b_pos_y = []
@@ -110,6 +109,7 @@ def game(screen, font):
     minutes = 0
     seconds = 0
     offset = pygame.time.get_ticks()
+    time = offset # inicio do jogo
     
     #Coordenadas iniciais das térmitas
     t_pos_x = []
@@ -240,7 +240,7 @@ def game(screen, font):
             pos_y = 50
     
     
-        if (pygame.time.get_ticks() - offset) - time >= t_spawn: # Criar as térmitas
+        if (pygame.time.get_ticks()) - time >= t_spawn: # Criar as térmitas
             time = pygame.time.get_ticks()
             leaving.append(False)
             moving.append(True)
@@ -251,8 +251,8 @@ def game(screen, font):
             t_color_out.append(colors_out[col])
             rand = random.randint(0, 3)
             t_animation_pos.append(0)
-            c_in.append(pygame.time.get_ticks() + 300)
-            c_out.append(pygame.time.get_ticks() + 300)
+            c_in.append(pygame.time.get_ticks() + 200)
+            c_out.append(pygame.time.get_ticks() + 200)
             if rand == 0:  # up
                 leave_pos.append((int(random.random() * 1000 - 20),-80 - 85))
             elif rand == 1:  # right
@@ -322,7 +322,7 @@ def game(screen, font):
                         else:
                             t_d_color.append(t_green_death)
                         pos_d_ani.append(0)
-                        c_d_ani.append(pygame.time.get_ticks() + 200)
+                        c_d_ani.append(pygame.time.get_ticks() + 120)
                         del leave_pos[ind]
                         del t_pos_x[ind]
                         del t_pos_y[ind]
@@ -363,6 +363,7 @@ def game(screen, font):
             if not respawn:
                 if collision_termites((pos_x, pos_y), r, (t_pos_x[ind], t_pos_y[ind]) , r_t):
                         lives -= 1
+                        fuel_tot = 0
                         explosion_ship_sound()
                         pos_x = SC_WIDTH/2 - ship.get_width() / 2
                         pos_y = SC_HEIGHT/2 - ship.get_height() / 2
@@ -375,6 +376,7 @@ def game(screen, font):
                 if not respawn:
                     if collision_blocks((pos_x, pos_y), r, b, r_b):
                         lives -= 1
+                        fuel_tot = 0
                         explosion_ship_sound()
                         pos_x = SC_WIDTH/2 - ship.get_width() / 2
                         pos_y = SC_HEIGHT/2 - ship.get_height() / 2 
@@ -393,6 +395,7 @@ def game(screen, font):
                     if collision_blocks((pos_x, pos_y), r, b, r_b):
                         del blocks[ind]
                         lives -= 1
+                        fuel_tot = 0
                         explosion_ship_sound()
                         pos_x = SC_WIDTH/2 - ship.get_width() / 2
                         pos_y = SC_HEIGHT/2 - ship.get_height() / 2
@@ -424,7 +427,14 @@ def game(screen, font):
         if fuel_tot < 0:
             fuel_tot = 0
         if int(fuel_tot) == 30:
-            running = False
+            lives -= 1
+            fuel_tot = 0
+            explosion_ship_sound()
+            pos_x = SC_WIDTH/2 - ship.get_width() / 2
+            pos_y = SC_HEIGHT/2 - ship.get_height() / 2
+            respawn = True
+            die_time = pygame.time.get_ticks()
+            res_time = pygame.time.get_ticks() + res_cool
         fuel_tot += fuel_inc * dt
         seconds = ((pygame.time.get_ticks() - offset) // 1000) % 60
         minutes = ((pygame.time.get_ticks() - offset) // 1000) // 60
@@ -478,7 +488,7 @@ def game(screen, font):
                 screen.blit(t_d_color[ind][pos_d_ani[ind]], t_d_pos[ind])
                 c_d_ani[ind] -= 1
                 if pygame.time.get_ticks() >= c_d_ani[ind]:
-                    c_d_ani[ind] = pygame.time.get_ticks() + 200
+                    c_d_ani[ind] = pygame.time.get_ticks() + 120
                     pos_d_ani[ind] += 1
         for ind, pos_x_termita in enumerate(t_pos_x):
             if moving[ind]:
@@ -486,14 +496,14 @@ def game(screen, font):
                 if pygame.time.get_ticks() >= c_in[ind]:
                     t_animation_pos[ind] += 1
                     t_animation_pos[ind] = t_animation_pos[ind] % 4
-                    c_in[ind] = pygame.time.get_ticks()+300
+                    c_in[ind] = pygame.time.get_ticks()+200
                 screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
             else:
                 temp = t_color_out[ind][t_animation_pos[ind]]
                 if pygame.time.get_ticks() >= c_out[ind]:
                     t_animation_pos[ind] += 1
                     t_animation_pos[ind] = t_animation_pos[ind] % 4
-                    c_out[ind] = pygame.time.get_ticks()+300
+                    c_out[ind] = pygame.time.get_ticks()+200
                 screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
         for ind in range(len(b_pos_x)):
             screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))

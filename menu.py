@@ -1,5 +1,12 @@
 import pygame
 
+
+def select_sound():
+    pygame.mixer.music.load("sounds/select.wav")
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play()
+
+
 def menu(screen, score):
     up = False
     down = False
@@ -21,6 +28,7 @@ def menu(screen, score):
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_ESCAPE:
                     running = False
+                    return 1
                 elif (ev.key == pygame.K_w or ev.key == pygame.K_UP) and time <= pygame.time.get_ticks():
                     up = True
                     time = pygame.time.get_ticks() + 300
@@ -38,13 +46,16 @@ def menu(screen, score):
                     time = pygame.time.get_ticks()
         #lógica
         if press:
+            select_sound()
             return actual
         if up:
             actual = (actual - 1)  % 2
             up = False
+            select_sound()
         if down:
             actual = (actual + 1)  % 2
             down = False
+            select_sound()
         
         if actual == 0:
             c1 = pygame.Color(255, 107, 107)
