@@ -17,6 +17,7 @@ def menu(screen, score):
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 running = False
+                return 1
             elif ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_ESCAPE:
                     running = False

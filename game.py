@@ -67,6 +67,7 @@ def explosion_ship_sound():
 def game(screen, font):
     global SC_WIDTH
     global SC_HEIGHT
+    debug_speed = False
     left_mov = False
     right_mov = False
     up_mov = False
@@ -178,6 +179,8 @@ def game(screen, font):
                     rot_left = True  
                 elif ev.key == pygame.K_e:
                     rot_right = True  
+                elif ev.key == pygame.K_p:
+                    debug_speed = not debug_speed
                 elif ev.key == pygame.K_SPACE:
                     shooting = True
             elif ev.type == pygame.KEYUP:
@@ -198,20 +201,20 @@ def game(screen, font):
         #lógica
         dt = clock.tick()
         if up_mov:
-            v_y = -vel * dt
+            v_y = -vel
         if left_mov:
-            v_x = -vel * dt
+            v_x = -vel
         if down_mov:
-            v_y = vel * dt
+            v_y = vel
         if right_mov:
-            v_x = vel * dt
+            v_x = vel
          
         #normalizar velocidade
         
-        mod =  1/vel * (v_x **2 + v_y ** 2) ** (1/2)
+        mod = 1/vel * (v_x **2 + v_y ** 2) ** (1/2)
         
         if mod != 0:
-            pos_x, pos_y = (pos_x + v_x/mod, pos_y + v_y/mod)
+            pos_x, pos_y = (pos_x + (v_x/mod)*dt, pos_y + (v_y/mod)*dt)
         v_x = v_y = 0
         
         #Rotações
@@ -248,41 +251,43 @@ def game(screen, font):
             t_color_out.append(colors_out[col])
             rand = random.randint(0, 3)
             t_animation_pos.append(0)
-            c_in.append(0)
-            c_out.append(0)
-            if rand == 0:
+            c_in.append(pygame.time.get_ticks() + 300)
+            c_out.append(pygame.time.get_ticks() + 300)
+            if rand == 0:  # up
                 leave_pos.append((int(random.random() * 1000 - 20),-80 - 85))
-            elif rand == 1:
+            elif rand == 1:  # right
                 leave_pos.append((1080 - 20,int(random.random() * 750)- 85))
-            elif rand == 2:
-                leave_pos.append((int(random.random() * 1000)- 20,750 + 80 - 85))
-            else:
+            elif rand == 2:  # down
+                leave_pos.append((int(random.random() * 1000)- 20, 750))
+            else:  # left
                 leave_pos.append((-80 - 20,int(random.random() * 750)- 85))
             place_pos.append((int(random.random() * 1000)- 20, random.randint(50, 750) - 85))
-        for ind in range(len((t_pos_x))):
+        for ind in range(len((t_pos_x))):  # enemies
     
             if moving[ind]:
-                t_vel_x = t_vel * dt * (place_pos[ind][0] - t_pos_x[ind])
-                t_vel_y = t_vel * dt * (place_pos[ind][1] - t_pos_y[ind])
-                place_gap_x = int((place_pos[ind][0] - t_pos_x[ind]))
-                place_gap_y = int((place_pos[ind][1] - t_pos_y[ind]))
+                t_vel_x = t_vel * (place_pos[ind][0] - t_pos_x[ind])
+                t_vel_y = t_vel * (place_pos[ind][1] - t_pos_y[ind])
+                place_gap_x = int(place_pos[ind][0] - t_pos_x[ind])
+                place_gap_y = int(place_pos[ind][1] - t_pos_y[ind])
                 mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
                 if mod_t != 0:
-                    t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
-                if place_gap_x == 0 and place_gap_y == 0:
+                    t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + (t_vel_x/mod_t)*dt, t_pos_y[ind] + (t_vel_y/mod_t)*dt
+                #if abs(place_gap_x) <= 10 and place_gap_y < 0:
+                if ((t_vel_x < 0 and t_pos_x[ind] <= place_pos[ind][0]) or (t_vel_x >= 0 and t_pos_x[ind] >= place_pos[ind][0])) and t_pos_y[ind] >= place_pos[ind][1]:
                     leaving[ind] = True
                     place_block((t_pos_x[ind], t_pos_y[ind]), blocks)
                     moving[ind] = False
                
             elif leaving[ind]:
-                t_vel_x = t_vel * dt * (leave_pos[ind][0] - t_pos_x[ind])
-                t_vel_y = t_vel * dt * (leave_pos[ind][1] - t_pos_y[ind])
+                t_vel_x = t_vel * (leave_pos[ind][0] - t_pos_x[ind])
+                t_vel_y = t_vel * (leave_pos[ind][1] - t_pos_y[ind])
                 leave_gap_x = int((leave_pos[ind][0] - t_pos_x[ind]))
                 leave_gap_y = int((leave_pos[ind][1] - t_pos_y[ind]))
                 mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
                 if mod_t != 0:
-                    t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + t_vel_x/mod_t, t_pos_y[ind] + t_vel_y/mod_t
-                if leave_gap_x == 0 and leave_gap_y == 0:
+                    t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + (t_vel_x/mod_t)*dt, t_pos_y[ind] + (t_vel_y/mod_t)*dt
+                #if leave_gap_x == 0 and leave_gap_y == 0:
+                if t_pos_x[ind]+40 < 0 or t_pos_x[ind] > SC_WIDTH or t_pos_y[ind] > SC_HEIGHT-50 or t_pos_y[ind]+90 < 50:
                     del leave_pos[ind]
                     del t_pos_x[ind]
                     del t_pos_y[ind]
@@ -317,7 +322,7 @@ def game(screen, font):
                         else:
                             t_d_color.append(t_green_death)
                         pos_d_ani.append(0)
-                        c_d_ani.append(65)
+                        c_d_ani.append(pygame.time.get_ticks() + 200)
                         del leave_pos[ind]
                         del t_pos_x[ind]
                         del t_pos_y[ind]
@@ -472,27 +477,23 @@ def game(screen, font):
             else:
                 screen.blit(t_d_color[ind][pos_d_ani[ind]], t_d_pos[ind])
                 c_d_ani[ind] -= 1
-                if c_d_ani[ind] == 0:
-                    c_d_ani[ind] = 65
+                if pygame.time.get_ticks() >= c_d_ani[ind]:
+                    c_d_ani[ind] = pygame.time.get_ticks() + 200
                     pos_d_ani[ind] += 1
         for ind, pos_x_termita in enumerate(t_pos_x):
             if moving[ind]:
                 temp = t_color_in[ind][t_animation_pos[ind]]
-                if c_in[ind] == 150:
+                if pygame.time.get_ticks() >= c_in[ind]:
                     t_animation_pos[ind] += 1
                     t_animation_pos[ind] = t_animation_pos[ind] % 4
-                    c_in[ind] = 0
-                c_in[ind] += 1
+                    c_in[ind] = pygame.time.get_ticks()+300
                 screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
-    
             else:
                 temp = t_color_out[ind][t_animation_pos[ind]]
-                if c_out[ind] == 150:
+                if pygame.time.get_ticks() >= c_out[ind]:
                     t_animation_pos[ind] += 1
                     t_animation_pos[ind] = t_animation_pos[ind] % 4
-                    c_out[ind] = 0
-    
-                c_out[ind] += 1
+                    c_out[ind] = pygame.time.get_ticks()+300
                 screen.blit(temp, (pos_x_termita, t_pos_y[ind]))
         for ind in range(len(b_pos_x)):
             screen.blit(bullet, (b_pos_x[ind], b_pos_y[ind]))
@@ -529,4 +530,7 @@ def game(screen, font):
         if lives >= 1:
             screen.blit(life, (245, 768))
         pygame.display.flip()
+
+        if debug_speed:
+            pygame.time.wait(50)
     return score
