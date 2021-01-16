@@ -64,7 +64,7 @@ def explosion_ship_sound():
     pygame.mixer.music.play()
 
 
-def game(screen, font):
+def game(screen, font, gamemode=0):
     global SC_WIDTH
     global SC_HEIGHT
     debug_speed = False
@@ -90,7 +90,7 @@ def game(screen, font):
     energized = False
     en_time = 0
     en_cool = 3000
-    game_time = 15000
+    game_time = 15000 if gamemode == 0 else 10000
     score = 0
     lives = 3
     ang = 0
@@ -103,9 +103,9 @@ def game(screen, font):
     c = 0
     change = False
     fuel_tot = 0
-    fuel_inc = 0.0005
+    fuel_inc = 0.0005 if gamemode == 0 else 0.001
     fuel_regen = 5
-    t_spawn = 4000
+    t_spawn = 4000 if gamemode == 0 else 1500
     minutes = 0
     seconds = 0
     offset = pygame.time.get_ticks()
@@ -115,7 +115,7 @@ def game(screen, font):
     t_pos_x = []
     t_pos_y = []
     
-    t_vel = 0.15
+    t_vel = 0.15 if gamemode == 0 else 0.2
     spawn_c = 0 # contador de térmitas
     t_color_in = []
     t_color_out = []
@@ -155,8 +155,7 @@ def game(screen, font):
     pos_x = SC_WIDTH/2 - ship.get_width() / 2
     pos_y = SC_HEIGHT/2 - ship.get_height() / 2
     cp = ship
-    
-      
+
     
     running = True
     while running:
@@ -309,9 +308,15 @@ def game(screen, font):
                             en_time = pygame.time.get_ticks()
                         if moving[ind]:
                             place_block((t_pos_x[ind], t_pos_y[ind]), blocks)
-                            score += 2
+                            if gamemode == 0:
+                                score += 2
+                            else:
+                                score += 3
                         else:
-                            score += 1
+                            if gamemode == 0:
+                                score += 1
+                            else:
+                                score += 2
                         fuel_tot -= fuel_regen
                         explosion_sound()
                         t_d_pos.append((t_pos_x[ind], t_pos_y[ind]))
@@ -394,6 +399,10 @@ def game(screen, font):
                 if not respawn:
                     if collision_blocks((pos_x, pos_y), r, b, r_b):
                         del blocks[ind]
+                        if gamemode == 0:
+                            score += 3
+                        else:
+                            score += 4
                         lives -= 1
                         fuel_tot = 0
                         explosion_ship_sound()
@@ -411,12 +420,18 @@ def game(screen, font):
                         del increment[0]
                         fuel_tot -= fuel_regen
                         block_en_sound()
-                        score += 3
+                        if gamemode == 0:
+                            score += 3
+                        else:
+                            score += 4
                         break
         if energized and pygame.time.get_ticks() - en_time >= en_cool:
             energized = False
         if game_time <=  (pygame.time.get_ticks() - offset):
-            game_time =  (pygame.time.get_ticks() - offset) + 15000
+            if gamemode == 0:
+                game_time =  (pygame.time.get_ticks() - offset) + 15000
+            else:
+                game_time =  (pygame.time.get_ticks() - offset) + 10000
             t_vel += 0.1 * t_vel
             fuel_inc += 0.1 * fuel_inc
             fuel_regen -= 0.1 * fuel_regen

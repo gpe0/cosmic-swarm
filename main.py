@@ -24,7 +24,11 @@ while True:
         sc = game(screen, font)
         if sc > score:
             score = sc
-    if op == 1:
+    elif op == 2:
         break
+    else:
+        sc = game(screen, font, 1)
+        if sc > score:
+            score = sc
 
 pygame.quit()
