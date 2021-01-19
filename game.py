@@ -64,9 +64,10 @@ def explosion_ship_sound():
     pygame.mixer.music.play()
 
 
-def game(screen, font, gamemode=0):
+def game(screen, gamemode=0):
     global SC_WIDTH
     global SC_HEIGHT
+    font = pygame.font.Font('font/8-bit-pusab.ttf', 23)
     debug_speed = False
     left_mov = False
     right_mov = False
@@ -150,6 +151,7 @@ def game(screen, font, gamemode=0):
     c_in = []
     c_out = []
     clock = pygame.time.Clock()
+    on = False
     
     #Coordenadas e angulo inicial da nave
     pos_x = SC_WIDTH/2 - ship.get_width() / 2
@@ -178,7 +180,7 @@ def game(screen, font, gamemode=0):
                     rot_left = True  
                 elif ev.key == pygame.K_e:
                     rot_right = True  
-                elif ev.key == pygame.K_p:
+                elif ev.key == pygame.K_F10:
                     debug_speed = not debug_speed
                 elif ev.key == pygame.K_SPACE:
                     shooting = True
@@ -454,7 +456,6 @@ def game(screen, font, gamemode=0):
         seconds = ((pygame.time.get_ticks() - offset) // 1000) % 60
         minutes = ((pygame.time.get_ticks() - offset) // 1000) // 60
         
-        
         #gráficos
         screen.fill('black')
         if not respawn:
@@ -467,9 +468,10 @@ def game(screen, font, gamemode=0):
         else:
             if pygame.time.get_ticks() >= res_time:
                 respawn = False
-                tick = 400
+                tick = 0
                 c = 0
                 on = False
+                change = False
             if pygame.time.get_ticks() - die_time < tick:
                 if change:
                     change = False
@@ -483,12 +485,7 @@ def game(screen, font, gamemode=0):
                 tick += 200
             
             if on:
-                if rot_left:
-                    screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_height()/2)))
-                elif rot_right:
-                    screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_height()/2)))
-                else:
-                    screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_width()/2)))
+                screen.blit(cp, (pos_x - int(cp.get_width()/2), pos_y - int(cp.get_height()/2)))
             else:
                 pass
 
