@@ -9,20 +9,23 @@ from time import time
 def place_block(termite_pos, blocks):
     blocks.append((int(termite_pos[0]) + 20, int(termite_pos[1]) + 68))
 
-
+# collision player with termite
 def collision_termites(p1, r1, p2, r2):
     d1 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 20))**2
     d2 = ((p1[0]) - (p2[0] + 20))**2 + ((p1[1]) - (p2[1] + 60))**2
     return (d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2)
 
+# collision player with blocks
 def collision_blocks(p1, r1, p2, r2):
     d = ((p1[0]) - (p2[0] + 6))**2 + ((p1[1]) - (p2[1] + 6))**2
     return (d < (r1 + r2)**2)
 
+# collision bullets with blocks
 def collision_bullets_blocks(p1, r1, p2, r2):
     d = ((p1[0]) - (p2[0] + 6))**2 + ((p1[1]) - (p2[1] + 6))**2
     return (d < (r1 + r2)**2)
 
+# collision bullets with termites
 def collision_bullets(p1, r1, p2, r2, moving, energized):
     d1 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 20))**2
     d2 = ((p1[0] + 1) - (p2[0] + 20))**2 + ((p1[1] + 1) - (p2[1] + 60))**2
@@ -37,6 +40,8 @@ def collision_bullets(p1, r1, p2, r2, moving, energized):
             if d1_e < (r1 + 5) ** 2 or d2_e < (r1 + 5) ** 2 or d3_e < (r1 + 5) ** 2 or d4_e < (r1 + 5) ** 2:
                 energized = True
     return ((d1 < (r1 + r2)**2) or (d2 < (r1 + r2)**2), energized)
+
+# Sound effect
 
 def shoot_sound():
     pygame.mixer.music.load("sounds/shoot.wav")
@@ -64,6 +69,8 @@ def explosion_ship_sound():
     pygame.mixer.music.play()
 
 
+# game function
+
 def game(screen, gamemode=0):
     global SC_WIDTH
     global SC_HEIGHT
@@ -79,13 +86,13 @@ def game(screen, gamemode=0):
     shooting = False
     v_x = 0
     v_y = 0
-    vel = 0.35 # velocidade x e y
-    ang_vel = 0.2 # velocidade de rotação
-    bul_sp = 0.5 # velocidade da bala
+    vel = 0.35 # velocity x and y
+    ang_vel = 0.2 # rotation velocity
+    bul_sp = 0.5 # bullet speed
     b_pos_x = []
     b_pos_y = []
     increment = []
-    shoot_cool = 1000 # Cooldown para disparar
+    shoot_cool = 1000 # shoot cooldown
     time_shoot = 0
     r_b = 6
     energized = False
@@ -110,17 +117,17 @@ def game(screen, gamemode=0):
     minutes = 0
     seconds = 0
     offset = pygame.time.get_ticks()
-    time = offset # inicio do jogo
+    time = offset # offset between the begin of the game and the begin of the program
     
-    #Coordenadas iniciais das térmitas
+    #termites' cords
     t_pos_x = []
     t_pos_y = []
     
     t_vel = 0.15 if gamemode == 0 else 0.2
-    spawn_c = 0 # contador de térmitas
+    spawn_c = 0 # termites' counter
     t_color_in = []
     t_color_out = []
-    leave_pos = [] # Parede de saída da térmita
+    leave_pos = [] # leaving position
     place_pos = []
     leaving = []
     moving = []
@@ -153,7 +160,7 @@ def game(screen, gamemode=0):
     clock = pygame.time.Clock()
     on = False
     
-    #Coordenadas e angulo inicial da nave
+    #ship's coords and initial angle
     pos_x = SC_WIDTH/2 - ship.get_width() / 2
     pos_y = SC_HEIGHT/2 - ship.get_height() / 2
     cp = ship
@@ -210,7 +217,7 @@ def game(screen, gamemode=0):
         if right_mov:
             v_x = vel
          
-        #normalizar velocidade
+        #normalize
         
         mod = 1/vel * (v_x **2 + v_y ** 2) ** (1/2)
         
@@ -218,7 +225,7 @@ def game(screen, gamemode=0):
             pos_x, pos_y = (pos_x + (v_x/mod)*dt, pos_y + (v_y/mod)*dt)
         v_x = v_y = 0
         
-        #Rotações
+        #rotations
         
         if rot_left:
             ang += ang_vel * dt
@@ -229,7 +236,7 @@ def game(screen, gamemode=0):
             ang %= 360
             cp = pygame.transform.rotate(ship, ang)
         
-        #Voltar ao ecrã
+        #back to the screen
         
         if pos_x < 0:
             pos_x = SC_WIDTH
@@ -241,7 +248,7 @@ def game(screen, gamemode=0):
             pos_y = 50
     
     
-        if (pygame.time.get_ticks()) - time >= t_spawn: # Criar as térmitas
+        if (pygame.time.get_ticks()) - time >= t_spawn: # Creating termites
             time = pygame.time.get_ticks()
             leaving.append(False)
             moving.append(True)
@@ -273,7 +280,6 @@ def game(screen, gamemode=0):
                 mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
                 if mod_t != 0:
                     t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + (t_vel_x/mod_t)*dt, t_pos_y[ind] + (t_vel_y/mod_t)*dt
-                #if abs(place_gap_x) <= 10 and place_gap_y < 0:
                 if ((t_vel_x < 0 and t_pos_x[ind] <= place_pos[ind][0]) or (t_vel_x >= 0 and t_pos_x[ind] >= place_pos[ind][0])) and t_pos_y[ind] >= place_pos[ind][1]:
                     leaving[ind] = True
                     place_block((t_pos_x[ind], t_pos_y[ind]), blocks)
@@ -287,7 +293,6 @@ def game(screen, gamemode=0):
                 mod_t = 1/t_vel * (t_vel_x **2 + t_vel_y ** 2) ** (1/2)
                 if mod_t != 0:
                     t_pos_x[ind], t_pos_y[ind] = t_pos_x[ind] + (t_vel_x/mod_t)*dt, t_pos_y[ind] + (t_vel_y/mod_t)*dt
-                #if leave_gap_x == 0 and leave_gap_y == 0:
                 if t_pos_x[ind]+40 < 0 or t_pos_x[ind] > SC_WIDTH or t_pos_y[ind] > SC_HEIGHT-50 or t_pos_y[ind]+90 < 50:
                     del leave_pos[ind]
                     del t_pos_x[ind]
