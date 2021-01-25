@@ -12,13 +12,13 @@ Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tem
 
 ### Controlos
 
-**W** / Up_Key - movimento para cima (tanto no jogo como no menu)
-**A** / Left_Key - movimento para a esquerda
-**D** / Right_Key - movimento para a direita
-**S** / Down_Key - movimento para baixo (tanto no jogo como no menu)
-**Q** - Rotação para a esquerda
-**E** - Rotação para a direita
-**Space** - Disparar
+**W** / Up_Key - movimento para cima (tanto no jogo como no menu)<br />
+**A** / Left_Key - movimento para a esquerda<br />
+**D** / Right_Key - movimento para a direita<br />
+**S** / Down_Key - movimento para baixo (tanto no jogo como no menu)<br />
+**Q** - Rotação para a esquerda<br />
+**E** - Rotação para a direita<br />
+**Space** - Disparar<br />
 
 ### UI
 
