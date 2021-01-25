@@ -10,6 +10,16 @@ Criar um clone do jogo [Cosmic Swarm](https://www.free80sarcade.com/atari2600_Co
 
 Cosmic Swarm é um shooting game 2D cujo objetivo é sobreviver o máximo de tempo possível, eliminando as térmitas com os "bolts" da nossa nave espacial (jogador). Estas térmitas transportam blocos dificultando o nível. Caso haja colisão entre o jogador e um bloco ou uma térmita o jogador é destruído.
 
+### Controlos
+
+**W** / Up_Key - movimento para cima (tanto no jogo como no menu)
+**A** / Left_Key - movimento para a esquerda
+**D** / Right_Key - movimento para a direita
+**S** / Down_Key - movimento para baixo (tanto no jogo como no menu)
+**Q** - Rotação para a esquerda
+**E** - Rotação para a direita
+**Space** - Disparar
+
 ### UI
 
 ![UI](https://github.com/gpe0/cosmic-swarm/blob/main/images/ui.jpg)
